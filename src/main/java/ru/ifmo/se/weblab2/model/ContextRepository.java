@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 public class ContextRepository implements Repository {
-    private Map<String, List<ResultPoint>> context;
+    private final Map<String, List<ResultPoint>> storage;
     private static ContextRepository instance;
 
     private ContextRepository() {
-        context = new HashMap<String, List<ResultPoint>>();
+        storage = new HashMap<>();
     }
 
     static public ContextRepository getInstance() {
@@ -20,21 +20,26 @@ public class ContextRepository implements Repository {
         return instance;
     }
 
-
     @Override
     public void createPoint(ResultPoint point, String sessionId) {
-        if (context.get(sessionId) == null) {
-            context.put(sessionId, new ArrayList<>());
+        if (storage.get(sessionId) == null) {
+            storage.put(sessionId, new ArrayList<>());
         }
-        context.get(sessionId).add(point);
-        System.out.println("Saved!");
+        storage.get(sessionId).add(point);
     }
 
     @Override
     public List<ResultPoint> getPointsList(String sessionId) {
-        if (context.get(sessionId) == null) {
-            context.put(sessionId, new ArrayList<>());
+        if (storage.get(sessionId) == null) {
+            storage.put(sessionId, new ArrayList<>());
         }
-        return (List<ResultPoint>) context.get(sessionId);
+        return storage.get(sessionId);
+    }
+
+    @Override
+    public void clearPointsList(String sessionId) {
+        if (storage.get(sessionId) != null) {
+            storage.get(sessionId).clear();
+        }
     }
 }

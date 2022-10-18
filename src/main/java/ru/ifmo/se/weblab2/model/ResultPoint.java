@@ -25,12 +25,6 @@ public class ResultPoint {
         return datetime;
     }
 
-//    public String getFormattedDate() {
-//        SimpleDateFormat sf = new SimpleDateFormat("dd.MM.yyyy, HH:mm:ss");
-//        Date _date = new Date(datetime * 1000);
-//        return sf.format(_date);
-//    }
-
     public long getDelay() {
         return delay;
     }

@@ -14,10 +14,12 @@ import java.io.PrintWriter;
 public class AreaCheckServlet extends HttpServlet {
     private Repository repository;
 
+    @Override
     public void init() {
         repository = ContextRepository.getInstance();
     }
 
+    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         long startTime = System.nanoTime();
         PrintWriter out = response.getWriter();
@@ -46,9 +48,9 @@ public class AreaCheckServlet extends HttpServlet {
             double x = Double.parseDouble(request.getParameter("x"));
             double y = Double.parseDouble(request.getParameter("y"));
             double r = Double.parseDouble(request.getParameter("r"));
-            return !(x < -4) && !(x > 4) &&
-                    !(y < -3) && !(y > 5) &&
-                    !(r < 1) && !(r > 5);
+            return (x >= -4) && (x <= 4) &&
+                    (y >= -5) && (y <= 5) &&
+                    (r >= 1) && (r <= 5);
         } catch (NumberFormatException ignored) {
             return false;
         }

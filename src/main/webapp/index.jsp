@@ -7,13 +7,13 @@
 <%@ page import="java.util.Arrays" %>
 <%@ page import="java.util.stream.Collectors" %>
 <%@ page import="java.time.Instant" %>
-<%@ page import="java.util.Date" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.time.ZoneOffset" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%!
     Repository repository = ContextRepository.getInstance();
+    List<ResultPoint> pointsList;
 %>
 <%!
     String formatDouble(double d) {
@@ -48,226 +48,12 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Title</title>
-    <style>
-        @font-face {
-            font-family: 'MyFont';
-            src: url(fonts/kremlin.ttf) format("truetype");
-        }
-        * {
-            margin: 0%;
-            padding: 0%;
-            font-family: 'MyFont';
-            color: #F8C104;
-            font-size: 20px;
-        }
-
-        header {
-            display: flex;
-            justify-content: center;
-            background-color: red;
-            padding: 10px;
-        }
-
-        header * {
-            font-family: monospace;
-            color: #F8C104;
-            font-size: 30px;
-        }
-
-        html {
-            background-color: #CC0404;
-        }
-
-        .panel {
-            display: flex;
-            justify-content: center;
-            flex-direction: row;
-            width: 100%;
-        }
-
-        .x {
-            flex-wrap: wrap;
-        }
-
-        form[method="get"] {
-            display: flex;
-            align-content: space-around;
-            flex-direction: column;
-            padding: 3%;
-        }
-
-        .graph {
-            border-width: 2px;
-            border-style: solid;
-            border-color: black;
-            margin: 20px;
-            width: 250px;
-            height: 250px;
-        }
-
-        .graph-image {
-            width: 250px;
-            height: 250px;
-            background-color: #F8C104;
-            background-size: cover;
-        }
-
-        .graph-image * {
-            font-family: monospace;
-        }
-
-        table {
-            table-layout: fixed;
-            width: 100%;
-            background-color:rgba(0, 0, 0, 0.5);
-        }
-
-        table, th {
-            border-width: 3px;
-            border-style: solid;
-            border-color: #F8C104;
-            border-collapse: collapse;
-        }
-
-        td {
-            padding: 5px;
-        }
-
-        tbody td {
-            text-align: center;
-        }
-
-        thead {
-            background: rgb(255, 0, 0);
-        }
-
-        .graph-axle-line {
-            stroke: black;
-        }
-
-        .submit-button {
-            width: 128px;
-            height: 32px;
-        }
-
-        .submit-button:hover {
-            background-color: red;
-        }
-
-        .error {
-            color: red;
-            background-color: rgba(0, 0, 0, 0.5);
-            border-width: 1px;
-            text-indent: 5px;
-            padding: .5em 1em;
-            width: 100%;
-            margin: 5px;
-        }
-
-        .graph-point {
-            stroke: black;
-        }
-
-        .form-input {
-            margin: 5px;
-            width: 100%;
-        }
-
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            width: 700px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .x {
-            border-color: #F8C104;
-            border-width: 5px;
-            padding: 10px;
-        }
-
-        .x legend {
-            padding-right: 10px;
-            padding-left: 10px;
-        }
-
-        .x input {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-
-            border-radius: 50%;
-            width: 16px;
-            height: 16px;
-
-            border: 2px solid #999;
-            transition: 0.2s all linear;
-            outline: none;
-            margin-right: 5px;
-
-            position: relative;
-            top: 4px;
-
-            border-color: #F8C104;
-        }
-
-        .x input:checked {
-            background-color: #f8bf04c0;
-        }
-
-        .bounce {
-            outline: 0;
-            border-color: red;
-            animation-name: bounce;
-            animation-duration: .5s;
-            animation-delay: 0.25s;
-        }
-
-        @keyframes bounce {
-            0% {
-                transform: translateX(0px);
-                timing-function: ease-in;
-            }
-            37% {
-                transform: translateX(5px);
-                timing-function: ease-out;
-            }
-            55% {
-                transform: translateX(-5px);
-                timing-function: ease-in;
-            }
-            73% {
-                transform: translateX(4px);
-                timing-function: ease-out;
-            }
-            82% {
-                transform: translateX(-4px);
-                timing-function: ease-in;
-            }
-            91% {
-                transform: translateX(2px);
-                timing-function: ease-out;
-            }
-            96% {
-                transform: translateX(-2px);
-                timing-function: ease-in;
-            }
-            100% {
-                transform: translateX(0px);
-                timing-function: ease-in;
-            }
-        }
-
-
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
 <header>
     <div class="header-container">
@@ -275,7 +61,7 @@
         <span>Lebedev Wieceslaw</span>
         <span>P32312</span>
         <span>3310</span>
-        <object data="star.svg" width="50px" height="50px"></object>
+        <object class="rotate" data="star.svg" width="50px" height="50px"></object>
     </div>
 </header>
 <main>
@@ -336,47 +122,52 @@
                     <text class="graph-label r-half-neg" text-anchor="start" x="160" y="205">-R/2</text>
                     <text class="graph-label r-half-pos" text-anchor="start" x="160" y="105">R/2</text>
                     <text class="graph-label r-whole-pos" text-anchor="start" x="160" y="55">R</text>
+
+                    <!-- dashes -->
+                    <line class="graph-axle-line graph-x-dash-line" stroke-dasharray="5,5" x1="-10" x2="-10" y1="0" y2="300"></line>
+                    <line class="graph-axle-line graph-y-dash-line" stroke-dasharray="5,5" x1="0" x2="300" y1="-10" y2="-10"></line>
+
+                    <%
+                        pointsList = repository.getPointsList(request.getRequestedSessionId());
+                        for (ResultPoint point: pointsList) {
+                            double x = (point.getX() / point.getR()) * 100 + 150;
+                            double y = -(point.getY() / point.getR()) * 100 + 150;
+                    %>
+                        <circle cx="<%=x%>" cy="<%=y%>" r="2"></circle>
+                    <%}%>
                 </svg>
             </div>
             <form action="change me" method="get" id="graphForm">
                 <fieldset class="x form-input">
                     <legend>X</legend>
                     <label>
-                        <span>-5</span>
-                        <input type="radio" name="x" value="-5">
+                        <input type="button" name="x" value="-4">
                     </label>
                     <label>
-                        <span>-4</span>
-                        <input type="radio" name="x" value="-4">
+                        <input type="button" name="x" value="-3">
                     </label>
                     <label>
-                        <span>-3</span>
-                        <input type="radio" name="x" value="-3">
+                        <input type="button" name="x" value="-2">
                     </label>
                     <label>
-                        <span>-2</span>
-                        <input type="radio" name="x" value="-2">
+                        <input type="button" name="x" value="-1">
                     </label>
                     <label>
-                        <span>-1</span>
-                        <input type="radio" name="x" value="-1">
+                        <input type="button" name="x" value="0">
                     </label>
                     <label>
-                        <span>0</span>
-                        <input type="radio" name="x" value="0" checked>
+                        <input type="button" name="x" value="1">
                     </label>
                     <label>
-                        <span>1</span>
-                        <input type="radio" name="x" value="1">
+                        <input type="button" name="x" value="2">
                     </label>
                     <label>
-                        <span>2</span>
-                        <input type="radio" name="x" value="2">
+                        <input type="button" name="x" value="3">
                     </label>
                     <label>
-                        <span>3</span>
-                        <input type="radio" name="x" value="3">
+                        <input type="button" name="x" value="4">
                     </label>
+                    <div id="x-error"></div>
                 </fieldset>
                 <div class="form-input">
                     <div>
@@ -384,20 +175,30 @@
                         <input type="text" name="y" id="y" maxlength="6" autocomplete="off"
                                placeholder="(-5...5)" />
                     </div>
-                    <div id="error"></div>
+                    <div id="y-error"></div>
                 </div>
-                <div class="form-input">
-                    <span>R</span>
-                    <select name="r" id="r">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </div>
+                <fieldset class="r form-input">
+                    <legend>R</legend>
+                    <label>
+                        <input type="button" name="r" value="1">
+                    </label>
+                    <label>
+                        <input type="button" name="r" value="2">
+                    </label>
+                    <label>
+                        <input type="button" name="r" value="3">
+                    </label>
+                    <label>
+                        <input type="button" name="r" value="4">
+                    </label>
+                    <label>
+                        <input type="button" name="r" value="5">
+                    </label>
+                    <div id="r-error"></div>
+                </fieldset>
                 <p>
                     <input type="submit" value="DAVAI" class="submit-button form-input">
+                    <input type="button" value="CLEAR" class="clear-button form-input">
                 </p>
             </form>
         </div>
@@ -417,7 +218,7 @@
                 </tr>
                 </thead>
                 <tbody id="table-body">
-                    <% List<ResultPoint> pointsList = repository.getPointsList(request.getRequestedSessionId());
+                    <% pointsList = repository.getPointsList(request.getRequestedSessionId());
                         long timeZoneOffset = getTimeZoneOffset(request);
                         ResultPoint point;
                         for (int i = pointsList.size() - 1; i >= 0; i--) {
@@ -441,6 +242,9 @@
 </main>
 <script src="js/js.cookie.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="js/errors.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/graph.js"></script>
 <script src="js/script.js"></script>
 </body>
 </html>

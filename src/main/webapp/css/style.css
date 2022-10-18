@@ -1,0 +1,209 @@
+@font-face {
+    font-family: 'MyFont';
+    src: url(../fonts/kremlin.ttf) format("truetype");
+}
+* {
+    margin: 0%;
+    padding: 0%;
+    font-family: 'MyFont';
+    color: #F8C104;
+    font-size: 20px;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    background-color: red;
+    padding: 10px;
+}
+
+header * {
+    font-family: monospace;
+    color: #F8C104;
+    font-size: 30px;
+}
+
+html {
+    background-color: #CC0404;
+}
+
+.panel {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    width: 100%;
+}
+
+.x {
+    flex-wrap: wrap;
+}
+
+form[method="get"] {
+    display: flex;
+    align-content: space-around;
+    flex-direction: column;
+    padding: 3%;
+}
+
+.graph {
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
+    margin: 20px;
+    width: 250px;
+    height: 250px;
+}
+
+.graph-image {
+    width: 250px;
+    height: 250px;
+    background-color: #F8C104;
+    background-size: cover;
+}
+
+.graph-image * {
+    font-family: monospace;
+}
+
+table {
+    table-layout: fixed;
+    width: 100%;
+    background-color:rgba(0, 0, 0, 0.5);
+}
+
+table, th {
+    border-width: 3px;
+    border-style: solid;
+    border-color: #F8C104;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 5px;
+}
+
+tbody td {
+    text-align: center;
+}
+
+thead {
+    background: rgb(255, 0, 0);
+}
+
+.graph-axle-line {
+    stroke: black;
+}
+
+.submit-button {
+    width: 128px;
+    height: 32px;
+}
+
+.submit-button:hover {
+    background-color: red;
+}
+
+.error {
+    color: red;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-width: 1px;
+    text-indent: 5px;
+    padding: .5em 1em;
+    width: fit-content;
+    margin: 5px;
+}
+
+.graph-point {
+    stroke: black;
+}
+
+.form-input {
+    margin: 5px;
+    width: 100%;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    width: 700px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.x {
+    border-color: #F8C104;
+    border-width: 5px;
+    padding: 10px;
+}
+
+.r {
+    border-color: #F8C104;
+    border-width: 5px;
+    padding: 10px;
+}
+
+.form-input legend {
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.active {
+    background-color: rgba(255, 0, 0, 50);
+}
+
+.form-input input:hover {
+    background-color: rgba(255, 0, 0, 100);
+}
+
+.bounce {
+    outline: 0;
+    border-color: red;
+    animation-name: bounce;
+    animation-duration: .5s;
+    animation-delay: 0.25s;
+}
+
+.rotate:hover {
+    animation: rotate 4s linear infinite;
+}
+
+@keyframes rotate {
+    100% {
+        transform:rotate(360deg);
+    }
+}
+
+@keyframes bounce {
+    0% {
+        transform: translateX(0px);
+        timing-function: ease-in;
+    }
+    37% {
+        transform: translateX(5px);
+        timing-function: ease-out;
+    }
+    55% {
+        transform: translateX(-5px);
+        timing-function: ease-in;
+    }
+    73% {
+        transform: translateX(4px);
+        timing-function: ease-out;
+    }
+    82% {
+        transform: translateX(-4px);
+        timing-function: ease-in;
+    }
+    91% {
+        transform: translateX(2px);
+        timing-function: ease-out;
+    }
+    96% {
+        transform: translateX(-2px);
+        timing-function: ease-in;
+    }
+    100% {
+        transform: translateX(0px);
+        timing-function: ease-in;
+    }
+}

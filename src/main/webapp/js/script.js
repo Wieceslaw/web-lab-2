@@ -1,63 +1,32 @@
 const form = document.querySelector('#graphForm')
 const y = document.querySelector('#y')
-const r = document.querySelector('#r')
-const error = document.querySelector('#error')
 const table = document.querySelector('#table-body')
-
-
-function handleError(errorMessage) {
-    error.textContent = errorMessage
-    if (errorMessage) {
-        error.classList.add("error")
-        y.classList.add("bounce")
-        setTimeout(function() {
-            y.classList.remove("bounce");
-        }, 1000);
-    }
-    else {
-        error.classList.remove("error")
-    }
-}
-
-function formatFloat(val) {
-    return val.replace(',', '.')
-}
+const xButtons = document.querySelectorAll('.x input')
+const rButtons = document.querySelectorAll('.r input')
+const clearButton = document.querySelector('.clear-button')
 
 function getY() {
     return formatFloat(y.value)
 }
 
 function getX() {
-    return $('input[name=x]:checked', '#graphForm').val()
+    let result = undefined
+    xButtons.forEach(element => {
+        if (element.classList.contains('active')) {
+            result = element.value
+        }
+    })
+    return result
 }
 
 function getR() {
-    return r.value
-}
-
-function formatDate(date) {
-    let options = {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric'
-    };
-    return date.toLocaleString('ru', options)
-}
-
-function parse_table_element(data) {
-    return `
-    <tr'>
-        <td>${formatDate(new Date(data['datetime'] * 1000))}</td>
-        <td>${data['delay']} mcs</td>
-        <td>${data['x']}</td>
-        <td>${data['y']}</td>
-        <td>${data['r']}</td>
-        <td>${data['formattedResult']}</td>
-    </tr>
-    `
+    let result = 0
+    rButtons.forEach(element => {
+        if (element.classList.contains('active')) {
+            result = element.value
+        }
+    })
+    return result
 }
 
 function add_element_to_table(data) {
@@ -65,29 +34,12 @@ function add_element_to_table(data) {
     table.insertAdjacentHTML('afterbegin', tableItem)
 }
 
-function sendData(event) {
-    // validation
-    handleError("")
-    if (!getY()) {
-        console.log("can not be empty")
-        handleError("Y can not be empty")
-        return
-    }
-    if (!+getY()) {
-        console.log("y must be number")
-        handleError("Y must be a number")
-        return
-    }
-    if (+getY() > 5 || +getY() < -5) {
-        console.log("y must be lower than 5 and higher then -5")
-        handleError("Y must be lower than 5 and higher then -5")
-        return
-    }
-    // sending
+function makeRequest(x, y, r) {
     let formData = {
-        'x': getX(),
-        'y': getY(),
-        'r': getR()
+        'x': x,
+        'y': y,
+        'r': r,
+        'command': 'check'
     }
     $.ajax({
         url: '/web-lab-2-1.0-SNAPSHOT/controller',
@@ -96,12 +48,50 @@ function sendData(event) {
         mimeType: 'multipart/form-data',
         type: 'GET',
         success: function(data){
-            add_element_to_table(JSON.parse(data))
+            parsedData = JSON.parse(data)
+            console.log(parsedData['x'], parsedData['y'], parsedData['r'])
+            addPointToGraph(parsedData['x'], parsedData['y'], parsedData['r'])
+            add_element_to_table(parsedData)
         },
         error: function(data) {
             alert(data)
-        }
+        },
+        timeout: 3000
     })
+}
+
+function sendData(event) {
+    // validation
+    clearYError()
+    clearXError()
+    clearRError()
+    if (!getX()) {
+        console.log("x not selected")
+        showXError("X cord value not selected")
+        return
+    }
+    if (!getY()) {
+        console.log("can not be empty")
+        showYError("Y can not be empty")
+        return
+    }
+    if (isNaN(getY())) {
+        console.log("y must be number")
+        showYError("Y must be a number")
+        return
+    }
+    if (+getY() > 5 || +getY() < -5) {
+        console.log("y must be lower than 5 and higher then -5")
+        showYError("Y must be lower than 5 and higher then -5")
+        return
+    }
+    if (!getR()) {
+        console.log("r not selected")
+        showRError("Radius value not selected")
+        return
+    }
+    // sending
+    makeRequest(getX(), getY(), getR())
 }
 
 function setTimezoneCookie () {
@@ -120,10 +110,48 @@ function setTimezoneCookie () {
     }
 }
 
+clearButton.addEventListener('click', event => {
+    $.ajax({
+        url: '/web-lab-2-1.0-SNAPSHOT/controller?command=clear',
+        type: 'GET',
+        success: function(data){
+            location.reload();
+        },
+        error: function(data) {
+            alert(data)
+        },
+        timeout: 3000
+    })
+})
+
 form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        sendData(event);
-    }
-)
+    event.preventDefault();
+    sendData(event);
+})
+
+xButtons.forEach(element => {
+    element.addEventListener( 'click', event => {
+            element.classList.add('active')
+            xButtons.forEach(nonActiveElement => {
+                if (nonActiveElement !== element) {
+                    nonActiveElement.classList.remove('active')
+                }
+            })
+        }
+    )
+})
+
+rButtons.forEach(element => {
+    element.addEventListener( 'click', event => {
+            changeGraphLabels(element.value)
+            element.classList.add('active')
+            rButtons.forEach(nonActiveElement => {
+                if (nonActiveElement !== element) {
+                    nonActiveElement.classList.remove('active')
+                }
+            })
+        }
+    )
+})
 
 setTimezoneCookie()

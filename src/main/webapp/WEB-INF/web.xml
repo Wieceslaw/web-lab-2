@@ -19,4 +19,12 @@
         <servlet-name>areaCheckServlet</servlet-name>
         <url-pattern>/check</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>clearPointServlet</servlet-name>
+        <servlet-class>ru.ifmo.se.weblab2.controller.ClearServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>clearPointServlet</servlet-name>
+        <url-pattern>/clear</url-pattern>
+    </servlet-mapping>
 </web-app>

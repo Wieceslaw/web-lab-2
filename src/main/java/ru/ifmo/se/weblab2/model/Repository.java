@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface Repository {
     void createPoint(ResultPoint point, String sessionId);
-
     List<ResultPoint> getPointsList(String sessionId);
+    void clearPointsList(String sessionId);
 }
