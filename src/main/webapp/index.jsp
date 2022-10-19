@@ -57,11 +57,11 @@
 <body>
 <header>
     <div class="header-container">
-        <object data="hammer.svg" width="50px" height="50px"></object>
+        <object data="images/hammer.svg" width="50px" height="50px"></object>
         <span>Lebedev Wieceslaw</span>
         <span>P32312</span>
         <span>3310</span>
-        <object class="rotate" data="star.svg" width="50px" height="50px"></object>
+        <object class="rotate" data="images/star.svg" width="50px" height="50px"></object>
     </div>
 </header>
 <main>
@@ -140,35 +140,17 @@
             <form action="change me" method="get" id="graphForm">
                 <fieldset class="x form-input">
                     <legend>X</legend>
-                    <label>
-                        <input type="button" name="x" value="-4">
-                    </label>
-                    <label>
-                        <input type="button" name="x" value="-3">
-                    </label>
-                    <label>
-                        <input type="button" name="x" value="-2">
-                    </label>
-                    <label>
-                        <input type="button" name="x" value="-1">
-                    </label>
-                    <label>
-                        <input type="button" name="x" value="0">
-                    </label>
-                    <label>
-                        <input type="button" name="x" value="1">
-                    </label>
-                    <label>
-                        <input type="button" name="x" value="2">
-                    </label>
-                    <label>
-                        <input type="button" name="x" value="3">
-                    </label>
-                    <label>
-                        <input type="button" name="x" value="4">
-                    </label>
-                    <div id="x-error"></div>
+                    <input type="button" name="x" value="-4">
+                    <input type="button" name="x" value="-3">
+                    <input type="button" name="x" value="-2">
+                    <input type="button" name="x" value="-1">
+                    <input type="button" name="x" value="0">
+                    <input type="button" name="x" value="1">
+                    <input type="button" name="x" value="2">
+                    <input type="button" name="x" value="3">
+                    <input type="button" name="x" value="4">
                 </fieldset>
+                <div id="x-error"></div>
                 <div class="form-input">
                     <div>
                         <span>Y</span>
@@ -179,23 +161,13 @@
                 </div>
                 <fieldset class="r form-input">
                     <legend>R</legend>
-                    <label>
-                        <input type="button" name="r" value="1">
-                    </label>
-                    <label>
-                        <input type="button" name="r" value="2">
-                    </label>
-                    <label>
-                        <input type="button" name="r" value="3">
-                    </label>
-                    <label>
-                        <input type="button" name="r" value="4">
-                    </label>
-                    <label>
-                        <input type="button" name="r" value="5">
-                    </label>
-                    <div id="r-error"></div>
+                    <input type="button" name="r" value="1">
+                    <input type="button" name="r" value="2">
+                    <input type="button" name="r" value="3">
+                    <input type="button" name="r" value="4">
+                    <input type="button" name="r" value="5">
                 </fieldset>
+                <div id="r-error"></div>
                 <p>
                     <input type="submit" value="DAVAI" class="submit-button form-input">
                     <input type="button" value="CLEAR" class="clear-button form-input">

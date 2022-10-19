@@ -49,12 +49,16 @@ function makeRequest(x, y, r) {
         type: 'GET',
         success: function(data){
             parsedData = JSON.parse(data)
-            console.log(parsedData['x'], parsedData['y'], parsedData['r'])
             addPointToGraph(parsedData['x'], parsedData['y'], parsedData['r'])
             add_element_to_table(parsedData)
         },
         error: function(data) {
-            alert(data)
+            // TODO: check other errors
+            if (data.statusText === "timeout") {
+                alert("The server is not responding")
+            } else {
+                alert("Something went wrong...${data.statusText}")
+            }
         },
         timeout: 3000
     })
@@ -118,7 +122,11 @@ clearButton.addEventListener('click', event => {
             location.reload();
         },
         error: function(data) {
-            alert(data)
+            if (data.statusText === "timeout") {
+                alert("The server is not responding")
+            } else {
+                alert("Something went wrong...${data.statusText}")
+            }
         },
         timeout: 3000
     })

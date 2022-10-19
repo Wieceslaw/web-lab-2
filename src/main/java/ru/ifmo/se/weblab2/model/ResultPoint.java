@@ -1,7 +1,5 @@
 package ru.ifmo.se.weblab2.model;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Objects;
 
 public class ResultPoint {

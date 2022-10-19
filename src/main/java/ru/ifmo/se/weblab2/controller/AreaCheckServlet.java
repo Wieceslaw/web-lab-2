@@ -2,6 +2,7 @@ package ru.ifmo.se.weblab2.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.ifmo.se.weblab2.model.ContextRepository;
+import ru.ifmo.se.weblab2.model.Point;
 import ru.ifmo.se.weblab2.model.Repository;
 import ru.ifmo.se.weblab2.model.ResultPoint;
 
@@ -23,43 +24,51 @@ public class AreaCheckServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         long startTime = System.nanoTime();
         PrintWriter out = response.getWriter();
-        double x = Double.parseDouble(request.getParameter("x"));
-        double y = Double.parseDouble(request.getParameter("y"));
-        double r = Double.parseDouble(request.getParameter("r"));
-        if (validateInput(request)) {
-            ResultPoint point = new ResultPoint(
+        Point point = validateInput(request);
+        if (point != null) {
+            ResultPoint rPoint = new ResultPoint(
                     System.currentTimeMillis() / 1000L,
                     (System.nanoTime() - startTime) / 1000,
-                    x,
-                    y,
-                    r,
-                    check(request)
+                    point.getX(),
+                    point.getY(),
+                    point.getR(),
+                    check(point)
             );
-            repository.createPoint(point, request.getRequestedSessionId());
+            repository.createPoint(rPoint, request.getRequestedSessionId());
             String json = new ObjectMapper().writeValueAsString(point);
             out.println(json);
         } else {
-            out.println("Error"); // TODO: dispatch to error page
+            response.setStatus(400);
+            out.println("Error");
         }
     }
 
-    private boolean validateInput(HttpServletRequest request) {
+    private Point validateInput(HttpServletRequest request) {
         try {
-            double x = Double.parseDouble(request.getParameter("x"));
-            double y = Double.parseDouble(request.getParameter("y"));
-            double r = Double.parseDouble(request.getParameter("r"));
-            return (x >= -4) && (x <= 4) &&
+            String xParam = request.getParameter("x");
+            String yParam = request.getParameter("y");
+            String rParam = request.getParameter("r");
+            if (xParam == null || yParam == null || rParam == null) {
+                return null;
+            }
+            double x = Double.parseDouble(xParam);
+            double y = Double.parseDouble(yParam);
+            double r = Double.parseDouble(rParam);
+            if (!((x >= -4) && (x <= 4) &&
                     (y >= -5) && (y <= 5) &&
-                    (r >= 1) && (r <= 5);
+                    (r >= 1) && (r <= 5))) {
+                return null;
+            }
+            return new Point(x, y, r);
         } catch (NumberFormatException ignored) {
-            return false;
+            return null;
         }
     }
 
-    private boolean check(HttpServletRequest request) {
-        double x = Double.parseDouble(request.getParameter("x"));
-        double y = Double.parseDouble(request.getParameter("y"));
-        double r = Double.parseDouble(request.getParameter("r"));
+    private boolean check(Point point) {
+        double x = point.getX();
+        double y = point.getY();
+        double r = point.getR();
         if (x > 0 && y > 0) {
             return false;
         } else if (x <= 0 && y >= 0) {
@@ -70,5 +79,4 @@ public class AreaCheckServlet extends HttpServlet {
             return Math.sqrt((x * x) + (y * y)) <= (r / 2);
         }
     }
-
 }

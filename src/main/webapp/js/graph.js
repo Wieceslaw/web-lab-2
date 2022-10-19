@@ -46,7 +46,6 @@ graphImage.addEventListener('click', event => {
     }
     if (xCord >= -4 && xCord <= 4 && yCord <= 5 && yCord >= -5) {
         makeRequest(xCord, Math.round(yCord * 10000) / 10000, r)
-        addPointToGraph(xCord, yCord, r)
     }
 })
 
