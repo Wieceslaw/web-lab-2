@@ -13,7 +13,6 @@
 
 <%!
     Repository repository = ContextRepository.getInstance();
-    List<ResultPoint> pointsList;
 %>
 <%!
     String formatDouble(double d) {
@@ -31,8 +30,7 @@
                     Arrays.stream(request.getCookies())
                             .collect(Collectors.toMap(Cookie::getName, Cookie::getValue));
             if (cookieMap.get("timezoneoffset") != null) {
-                long timezoneoffset = -Long.parseLong(cookieMap.get("timezoneoffset")) * 60;
-                return timezoneoffset;
+                return -Long.parseLong(cookieMap.get("timezoneoffset")) * 60;
             }
         }
         return 0;
@@ -51,8 +49,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <title>Title</title>
+    <title>Web lab</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="images/star.svg" type="image/icon type">
 </head>
 <body>
 <header>
@@ -60,7 +59,7 @@
         <object data="images/hammer.svg" width="50px" height="50px"></object>
         <span>Lebedev Wieceslaw</span>
         <span>P32312</span>
-        <span>3310</span>
+        <span>3231207</span>
         <object class="rotate" data="images/star.svg" width="50px" height="50px"></object>
     </div>
 </header>
@@ -128,7 +127,7 @@
                     <line class="graph-axle-line graph-y-dash-line" stroke-dasharray="5,5" x1="0" x2="300" y1="-10" y2="-10"></line>
 
                     <%
-                        pointsList = repository.getPointsList(request.getRequestedSessionId());
+                        List<ResultPoint> pointsList = repository.getPointsList(request.getRequestedSessionId());
                         for (ResultPoint point: pointsList) {
                             double x = (point.getX() / point.getR()) * 100 + 150;
                             double y = -(point.getY() / point.getR()) * 100 + 150;

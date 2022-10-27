@@ -7,17 +7,24 @@ import java.util.Map;
 
 public class ContextRepository implements Repository {
     private final Map<String, List<ResultPoint>> storage;
-    private static ContextRepository instance;
+    private static volatile ContextRepository instance;
+    private static final Object mutex = new Object();
 
     private ContextRepository() {
         storage = new HashMap<>();
     }
 
     static public ContextRepository getInstance() {
+        ContextRepository result = instance;
         if (instance == null) {
-            instance = new ContextRepository();
+            synchronized (mutex) {
+                result = instance;
+                if (instance == null) {
+                    instance = result = new ContextRepository();
+                }
+            }
         }
-        return instance;
+        return result;
     }
 
     @Override

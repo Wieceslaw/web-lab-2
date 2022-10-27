@@ -42,7 +42,7 @@ function makeRequest(x, y, r) {
         'command': 'check'
     }
     $.ajax({
-        url: '/web-lab-2-1.0-SNAPSHOT/controller',
+        url: '/laba2/controller',
         data: formData,
         processData: true,
         mimeType: 'multipart/form-data',
@@ -57,7 +57,7 @@ function makeRequest(x, y, r) {
             if (data.statusText === "timeout") {
                 alert("The server is not responding")
             } else {
-                alert("Something went wrong...${data.statusText}")
+                alert("Something went wrong...")
             }
         },
         timeout: 3000
@@ -116,7 +116,7 @@ function setTimezoneCookie () {
 
 clearButton.addEventListener('click', event => {
     $.ajax({
-        url: '/web-lab-2-1.0-SNAPSHOT/controller?command=clear',
+        url: '/lab2/controller?command=clear',
         type: 'GET',
         success: function(data){
             location.reload();
@@ -125,7 +125,7 @@ clearButton.addEventListener('click', event => {
             if (data.statusText === "timeout") {
                 alert("The server is not responding")
             } else {
-                alert("Something went wrong...${data.statusText}")
+                alert("Something went wrong...")
             }
         },
         timeout: 3000

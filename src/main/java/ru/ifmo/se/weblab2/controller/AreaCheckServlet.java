@@ -35,7 +35,7 @@ public class AreaCheckServlet extends HttpServlet {
                     check(point)
             );
             repository.createPoint(rPoint, request.getRequestedSessionId());
-            String json = new ObjectMapper().writeValueAsString(point);
+            String json = new ObjectMapper().writeValueAsString(rPoint);
             out.println(json);
         } else {
             response.setStatus(400);
